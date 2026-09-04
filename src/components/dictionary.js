@@ -274,13 +274,10 @@ const Dictionary = ({ onClose }) => {
             {filteredWords.map((item, index) => {
               const isRaddoppio = item.word.includes(" ");
               let badgeColor = "var(--color-text-muted)";
-              let label = "TV";
+              let label = "";
               if (isRaddoppio) {
                 badgeColor = "#c084fc";
                 label = "Raddoppio";
-              } else if (item.type === "captured") {
-                badgeColor = "var(--color-accent)";
-                label = "TV";
               }
 
               return (
@@ -298,28 +295,30 @@ const Dictionary = ({ onClose }) => {
                   }}
                   className="word-card-hover"
                 >
-                  <button
-                    className="dictionary-word-button"
-                    onClick={() => setSelectedHint(item)}
-                    title={item.hint || "Nessun suggerimento disponibile"}
-                    aria-label={`Mostra il suggerimento per ${item.word}`}
-                    style={{
-                      fontWeight: 600,
-                      fontSize: "0.9rem",
-                      color: "white",
-                    }}
-                  >
-                    {item.word.toUpperCase()}
-                  </button>
-                  <span
-                    className={`hint-status-icon ${item.hint ? "has-hint" : "no-hint"}`}
-                    title={item.hint ? "Suggerimento disponibile" : "Nessun suggerimento disponibile"}
-                    aria-label={item.hint ? "Suggerimento disponibile" : "Nessun suggerimento disponibile"}
-                  >
-                    <FaLightbulb aria-hidden="true" />
-                    {!item.hint && <FaSlash className="hint-status-slash" aria-hidden="true" />}
-                  </span>
-                  <span
+                  <div className="dictionary-word-group">
+                    <button
+                      className="dictionary-word-button"
+                      onClick={() => setSelectedHint(item)}
+                      title={item.hint || "Nessun suggerimento disponibile"}
+                      aria-label={`Mostra il suggerimento per ${item.word}`}
+                      style={{
+                        fontWeight: 600,
+                        fontSize: "0.9rem",
+                        color: "white",
+                      }}
+                    >
+                      {item.word.toUpperCase()}
+                    </button>
+                    <span
+                      className={`hint-status-icon ${item.hint ? "has-hint" : "no-hint"}`}
+                      title={item.hint ? "Suggerimento disponibile" : "Nessun suggerimento disponibile"}
+                      aria-label={item.hint ? "Suggerimento disponibile" : "Nessun suggerimento disponibile"}
+                    >
+                      <FaLightbulb aria-hidden="true" />
+                      {!item.hint && <FaSlash className="hint-status-slash" aria-hidden="true" />}
+                    </span>
+                  </div>
+                  {isRaddoppio && <span
                     style={{
                       fontSize: "0.6rem",
                       fontWeight: 700,
@@ -332,7 +331,7 @@ const Dictionary = ({ onClose }) => {
                     }}
                   >
                     {label}
-                  </span>
+                  </span>}
                 </div>
               );
             })}

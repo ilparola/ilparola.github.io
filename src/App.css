@@ -373,6 +373,12 @@ body {
   text-align: left;
 }
 
+.dictionary-word-group {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+}
+
 .dictionary-word-button:hover {
   color: var(--color-primary) !important;
   text-decoration: underline;
