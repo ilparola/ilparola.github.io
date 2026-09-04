@@ -3,7 +3,16 @@ import SummaryModal from "./summaryModal";
 import HintModal from "./hintModal";
 import { playSound } from "../lib/soundManager";
 import { getWordHint } from "../lib/dataProvider";
-import { FaPlay, FaPause, FaRedo, FaPlus, FaMinus, FaChevronUp, FaKeyboard, FaLightbulb } from "react-icons/fa";
+import {
+  FaPlay,
+  FaPause,
+  FaRedo,
+  FaPlus,
+  FaMinus,
+  FaChevronUp,
+  FaKeyboard,
+  FaLightbulb,
+} from "react-icons/fa";
 
 function Timer({ words, startingTime }) {
   const [time, setTime] = useState(startingTime);
@@ -30,7 +39,8 @@ function Timer({ words, startingTime }) {
     if (!isPaused && time > 0) {
       interval = setInterval(() => {
         setTime((prevTime) => {
-          const nextTime = prevTime <= 0.1 ? 0 : parseFloat((prevTime - 0.1).toFixed(1));
+          const nextTime =
+            prevTime <= 0.1 ? 0 : parseFloat((prevTime - 0.1).toFixed(1));
           return nextTime;
         });
       }, 100);
@@ -70,16 +80,16 @@ function Timer({ words, startingTime }) {
 
   const handleBuzz = useCallback(() => {
     if (endGame) return;
-    
+
     playSound("buzzer");
-    
+
     if (isPaused) {
       // Sta riprendendo o iniziando
       const unusedWords = words.filter(
         (w) =>
           !guessedWords.some((g) => g.word === w) &&
           !errors.some((e) => e.word === w) &&
-          !passedWords.some((p) => p.word === w)
+          !passedWords.some((p) => p.word === w),
       );
 
       let selectedWord = "";
@@ -91,7 +101,7 @@ function Timer({ words, startingTime }) {
         const randomIndex = Math.floor(Math.random() * words.length);
         selectedWord = words[randomIndex];
       }
-      
+
       setWord(selectedWord);
       setStartTime(time);
       setIsPaused(false);
@@ -103,7 +113,7 @@ function Timer({ words, startingTime }) {
 
   const handlePasso = useCallback(() => {
     if (endGame || cantPass()) return;
-    
+
     playSound("passo");
     setIsPaused(true);
 
@@ -116,7 +126,16 @@ function Timer({ words, startingTime }) {
     }
 
     setPassedWords((prev) => [...prev, { word: word, time: startTime - time }]);
-  }, [word, startTime, time, guessedWords, errors, passedWords, endGame, cantPass]);
+  }, [
+    word,
+    startTime,
+    time,
+    guessedWords,
+    errors,
+    passedWords,
+    endGame,
+    cantPass,
+  ]);
 
   const handleAddScore = useCallback(() => {
     if (endGame || !isPaused || !word) return;
@@ -135,7 +154,16 @@ function Timer({ words, startingTime }) {
       ...prev,
       { word: word, time: startTime - time },
     ]);
-  }, [word, startTime, time, guessedWords, errors, passedWords, endGame, isPaused]);
+  }, [
+    word,
+    startTime,
+    time,
+    guessedWords,
+    errors,
+    passedWords,
+    endGame,
+    isPaused,
+  ]);
 
   const handleSubtractScore = useCallback(() => {
     if (endGame || !isPaused || !word) return;
@@ -151,7 +179,16 @@ function Timer({ words, startingTime }) {
     playSound("incorrect");
     setScore((prevScore) => (prevScore > 0 ? prevScore - 1 : 0));
     setErrors((prev) => [...prev, { word: word, time: startTime - time }]);
-  }, [word, startTime, time, guessedWords, errors, passedWords, endGame, isPaused]);
+  }, [
+    word,
+    startTime,
+    time,
+    guessedWords,
+    errors,
+    passedWords,
+    endGame,
+    isPaused,
+  ]);
 
   const handleReset = useCallback(() => {
     playSound("intro");
@@ -170,17 +207,29 @@ function Timer({ words, startingTime }) {
   useEffect(() => {
     const handleKeyDown = (event) => {
       const key = event.key;
-      
+
       // Previene lo scrolling per tasti di gioco comuni
-      if (["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.code)) {
+      if (
+        ["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(
+          event.code,
+        )
+      ) {
         event.preventDefault();
       }
 
       if (event.code === "Space" || event.code === "Enter") {
         handleBuzz();
-      } else if (key === "+" || event.code === "ArrowRight" || key.toLowerCase() === "d") {
+      } else if (
+        key === "+" ||
+        event.code === "ArrowRight" ||
+        key.toLowerCase() === "d"
+      ) {
         handleAddScore();
-      } else if (key === "-" || event.code === "ArrowLeft" || key.toLowerCase() === "s") {
+      } else if (
+        key === "-" ||
+        event.code === "ArrowLeft" ||
+        key.toLowerCase() === "s"
+      ) {
         handleSubtractScore();
       } else if (event.code === "ArrowUp" || key.toLowerCase() === "p") {
         handlePasso();
@@ -193,16 +242,24 @@ function Timer({ words, startingTime }) {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [handleBuzz, handleAddScore, handleSubtractScore, handlePasso, handleReset]);
+  }, [
+    handleBuzz,
+    handleAddScore,
+    handleSubtractScore,
+    handlePasso,
+    handleReset,
+  ]);
 
   // Calcoli per il timer circolare
   const radius = 50;
   const circumference = 2 * Math.PI * radius;
-  const progressOffset = startingTime > 0 ? circumference - (time / startingTime) * circumference : circumference;
+  const progressOffset =
+    startingTime > 0
+      ? circumference - (time / startingTime) * circumference
+      : circumference;
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
-      
       {/* Dashboard Row (Timer e Punteggio) */}
       <div className="dashboard-row">
         <div className="glass-panel dashboard-card animate-scale-in">
@@ -215,34 +272,57 @@ function Timer({ words, startingTime }) {
                 cx="60"
                 cy="60"
                 r={radius}
-                stroke={time <= 5 ? "var(--color-danger)" : time <= 15 ? "var(--color-accent)" : "var(--color-primary)"}
+                stroke={
+                  time <= 5
+                    ? "var(--color-danger)"
+                    : time <= 15
+                      ? "var(--color-accent)"
+                      : "var(--color-primary)"
+                }
                 strokeDasharray={circumference}
                 strokeDashoffset={progressOffset}
                 style={{
-                  filter: time <= 5 ? "drop-shadow(0 0 4px var(--color-danger))" : "none"
+                  filter:
+                    time <= 5
+                      ? "drop-shadow(0 0 4px var(--color-danger))"
+                      : "none",
                 }}
               />
             </svg>
-            <div className={`timer-text ${time <= 5 ? "warning animate-pulse" : ""}`}>
+            <div
+              className={`timer-text ${time <= 5 ? "warning animate-pulse" : ""}`}
+            >
               {time.toFixed(1)}
             </div>
           </div>
         </div>
 
-        <div className="glass-panel dashboard-card animate-scale-in" style={{ animationDelay: "0.1s" }}>
+        <div
+          className="glass-panel dashboard-card animate-scale-in"
+          style={{ animationDelay: "0.1s" }}
+        >
           <span className="card-label">Punteggio</span>
           <div className="score-display">{score}</div>
         </div>
       </div>
 
       {/* Riquadro Parola Attiva */}
-      <div className="glass-panel word-section animate-scale-in" style={{ animationDelay: "0.2s" }}>
+      <div
+        className="glass-panel word-section animate-scale-in"
+        style={{ animationDelay: "0.2s" }}
+      >
         {word ? (
           <>
-            <span className={`word-status-badge ${isPaused ? "in-pausa" : "in-corso"}`}>
-              {isPaused ? "Tempo in Pausa - Conferma Risposta" : "Tempo in Corso - Descrivi la parola"}
+            <span
+              className={`word-status-badge ${isPaused ? "in-pausa" : "in-corso"}`}
+            >
+              {isPaused
+                ? "Tempo in Pausa - Conferma Risposta"
+                : "Tempo in Corso - Descrivi la parola"}
             </span>
-            <div className="word-display animate-fade-in">{word.toUpperCase()}</div>
+            <div className="word-display animate-fade-in">
+              {word.toUpperCase()}
+            </div>
             <button
               className="btn btn-primary hint-button"
               onClick={() => setIsHintModalOpen(true)}
@@ -254,14 +334,17 @@ function Timer({ words, startingTime }) {
           </>
         ) : (
           <div className="word-placeholder">
-            Premi il pulsante <b>BUZZER</b> (o la barra <b>Spazio</b>) per iniziare il gioco e rivelare la prima parola.
+            Premi il pulsante <b>BUZZER</b> (o la barra <b>Spazio</b>) per
+            iniziare il gioco e rivelare la prima parola.
           </div>
         )}
       </div>
 
       {/* Pannello Controlli */}
-      <div className="glass-panel controls-panel animate-scale-in" style={{ animationDelay: "0.3s" }}>
-        
+      <div
+        className="glass-panel controls-panel animate-scale-in"
+        style={{ animationDelay: "0.3s" }}
+      >
         {/* Riga 1: Buzzer e Passo */}
         <div className="controls-row-primary">
           <button
@@ -269,10 +352,14 @@ function Timer({ words, startingTime }) {
             onClick={handleBuzz}
             disabled={endGame}
           >
-            {isPaused ? <FaPlay style={{ fontSize: "1.1rem" }} /> : <FaPause style={{ fontSize: "1.1rem" }} />}
+            {isPaused ? (
+              <FaPlay style={{ fontSize: "1.1rem" }} />
+            ) : (
+              <FaPause style={{ fontSize: "1.1rem" }} />
+            )}
             {isPaused ? "BUZZER / VIA" : "BUZZER / PAUSA"}
           </button>
-          
+
           <button
             className="btn btn-dark btn-passo"
             onClick={handlePasso}
@@ -292,7 +379,7 @@ function Timer({ words, startingTime }) {
           >
             <FaPlus /> CORRETTO
           </button>
-          
+
           <button
             className="btn btn-danger btn-score-adjust"
             onClick={handleSubtractScore}
@@ -312,24 +399,35 @@ function Timer({ words, startingTime }) {
 
         {/* Scorciatoie Guida */}
         <div className="shortcuts-hint">
-          <span><FaKeyboard style={{ marginRight: "4px" }} /> Scorciatoie:</span>
-          <span><span className="shortcut-badge">Spazio / Invio</span> Buzzer</span>
-          <span><span className="shortcut-badge">↑ / P</span> Passo</span>
-          <span><span className="shortcut-badge">→ / D</span> Corretto</span>
-          <span><span className="shortcut-badge">← / S</span> Errore</span>
-          <span><span className="shortcut-badge">R</span> Reset</span>
+          <span>
+            <FaKeyboard style={{ marginRight: "4px" }} /> Scorciatoie:
+          </span>
+          <span>
+            <span className="shortcut-badge">Spazio / Invio</span> Buzzer
+          </span>
+          <span>
+            <span className="shortcut-badge">↑ / P</span> Passo
+          </span>
+          <span>
+            <span className="shortcut-badge">→ / D</span> Corretto
+          </span>
+          <span>
+            <span className="shortcut-badge">← / S</span> Errore
+          </span>
+          <span>
+            <span className="shortcut-badge">R</span> Reset
+          </span>
         </div>
       </div>
 
       {/* Tabella Storico Parole Giocate */}
-      <div className="glass-panel history-section animate-scale-in" style={{ animationDelay: "0.4s" }}>
+      <div
+        className="glass-panel history-section animate-scale-in"
+        style={{ animationDelay: "0.4s" }}
+      >
         <div className="history-header">
-          <div className="history-title">
-            Storico Parole della Partita
-          </div>
-          <div className="words-count-badge">
-            {words.length} nel dizionario
-          </div>
+          <div className="history-title">Storico Parole della Partita</div>
+          <div className="words-count-badge">{words.length} nel dizionario</div>
         </div>
 
         <div className="history-columns">
@@ -346,7 +444,17 @@ function Timer({ words, startingTime }) {
                 </li>
               ))}
               {guessedWords.length === 0 && (
-                <div style={{ textAlign: "center", color: "var(--color-text-muted)", fontSize: "0.8rem", padding: "1rem", fontStyle: "italic" }}>Vuoto</div>
+                <div
+                  style={{
+                    textAlign: "center",
+                    color: "var(--color-text-muted)",
+                    fontSize: "0.8rem",
+                    padding: "1rem",
+                    fontStyle: "italic",
+                  }}
+                >
+                  Vuoto
+                </div>
               )}
             </ul>
           </div>
@@ -364,7 +472,17 @@ function Timer({ words, startingTime }) {
                 </li>
               ))}
               {errors.length === 0 && (
-                <div style={{ textAlign: "center", color: "var(--color-text-muted)", fontSize: "0.8rem", padding: "1rem", fontStyle: "italic" }}>Vuoto</div>
+                <div
+                  style={{
+                    textAlign: "center",
+                    color: "var(--color-text-muted)",
+                    fontSize: "0.8rem",
+                    padding: "1rem",
+                    fontStyle: "italic",
+                  }}
+                >
+                  Vuoto
+                </div>
               )}
             </ul>
           </div>
@@ -382,7 +500,17 @@ function Timer({ words, startingTime }) {
                 </li>
               ))}
               {passedWords.length === 0 && (
-                <div style={{ textAlign: "center", color: "var(--color-text-muted)", fontSize: "0.8rem", padding: "1rem", fontStyle: "italic" }}>Vuoto</div>
+                <div
+                  style={{
+                    textAlign: "center",
+                    color: "var(--color-text-muted)",
+                    fontSize: "0.8rem",
+                    padding: "1rem",
+                    fontStyle: "italic",
+                  }}
+                >
+                  Vuoto
+                </div>
               )}
             </ul>
           </div>

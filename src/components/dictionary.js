@@ -1,6 +1,16 @@
 import { useState, useMemo } from "react";
-import { FaSearch, FaBook, FaArrowLeft, FaLightbulb, FaSlash } from "react-icons/fa";
-import { getCapturedWords, getRaddoppi, getWordHint } from "../lib/dataProvider";
+import {
+  FaSearch,
+  FaBook,
+  FaArrowLeft,
+  FaLightbulb,
+  FaSlash,
+} from "react-icons/fa";
+import {
+  getCapturedWords,
+  getRaddoppi,
+  getWordHint,
+} from "../lib/dataProvider";
 import HintModal from "./hintModal";
 
 const Dictionary = ({ onClose }) => {
@@ -310,27 +320,42 @@ const Dictionary = ({ onClose }) => {
                       {item.word.toUpperCase()}
                     </button>
                   </div>
-                  {isRaddoppio && <span
-                    style={{
-                      fontSize: "0.6rem",
-                      fontWeight: 700,
-                      textTransform: "uppercase",
-                      padding: "0.15rem 0.35rem",
-                      borderRadius: "4px",
-                      background: `${badgeColor}22`,
-                      border: `1px solid ${badgeColor}44`,
-                      color: badgeColor,
-                    }}
-                  >
-                    {label}
-                  </span>}
+                  {isRaddoppio && (
+                    <span
+                      style={{
+                        fontSize: "0.6rem",
+                        fontWeight: 700,
+                        textTransform: "uppercase",
+                        padding: "0.15rem 0.35rem",
+                        borderRadius: "4px",
+                        background: `${badgeColor}22`,
+                        border: `1px solid ${badgeColor}44`,
+                        color: badgeColor,
+                      }}
+                    >
+                      {label}
+                    </span>
+                  )}
                   <span
                     className={`hint-status-icon ${item.hint ? "has-hint" : "no-hint"}`}
-                    title={item.hint ? "Suggerimento disponibile" : "Nessun suggerimento disponibile"}
-                    aria-label={item.hint ? "Suggerimento disponibile" : "Nessun suggerimento disponibile"}
+                    title={
+                      item.hint
+                        ? "Suggerimento disponibile"
+                        : "Nessun suggerimento disponibile"
+                    }
+                    aria-label={
+                      item.hint
+                        ? "Suggerimento disponibile"
+                        : "Nessun suggerimento disponibile"
+                    }
                   >
                     <FaLightbulb aria-hidden="true" />
-                    {!item.hint && <FaSlash className="hint-status-slash" aria-hidden="true" />}
+                    {!item.hint && (
+                      <FaSlash
+                        className="hint-status-slash"
+                        aria-hidden="true"
+                      />
+                    )}
                   </span>
                 </div>
               );
