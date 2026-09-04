@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { FaSearch, FaBook, FaArrowLeft } from "react-icons/fa";
+import { FaSearch, FaBook, FaArrowLeft, FaLightbulb, FaSlash } from "react-icons/fa";
 import { getCapturedWords, getRaddoppi, getWordHint } from "../lib/dataProvider";
 import HintModal from "./hintModal";
 
@@ -311,6 +311,14 @@ const Dictionary = ({ onClose }) => {
                   >
                     {item.word.toUpperCase()}
                   </button>
+                  <span
+                    className={`hint-status-icon ${item.hint ? "has-hint" : "no-hint"}`}
+                    title={item.hint ? "Suggerimento disponibile" : "Nessun suggerimento disponibile"}
+                    aria-label={item.hint ? "Suggerimento disponibile" : "Nessun suggerimento disponibile"}
+                  >
+                    <FaLightbulb aria-hidden="true" />
+                    {!item.hint && <FaSlash className="hint-status-slash" aria-hidden="true" />}
+                  </span>
                   <span
                     style={{
                       fontSize: "0.6rem",
