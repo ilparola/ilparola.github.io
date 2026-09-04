@@ -309,14 +309,6 @@ const Dictionary = ({ onClose }) => {
                     >
                       {item.word.toUpperCase()}
                     </button>
-                    <span
-                      className={`hint-status-icon ${item.hint ? "has-hint" : "no-hint"}`}
-                      title={item.hint ? "Suggerimento disponibile" : "Nessun suggerimento disponibile"}
-                      aria-label={item.hint ? "Suggerimento disponibile" : "Nessun suggerimento disponibile"}
-                    >
-                      <FaLightbulb aria-hidden="true" />
-                      {!item.hint && <FaSlash className="hint-status-slash" aria-hidden="true" />}
-                    </span>
                   </div>
                   {isRaddoppio && <span
                     style={{
@@ -332,6 +324,14 @@ const Dictionary = ({ onClose }) => {
                   >
                     {label}
                   </span>}
+                  <span
+                    className={`hint-status-icon ${item.hint ? "has-hint" : "no-hint"}`}
+                    title={item.hint ? "Suggerimento disponibile" : "Nessun suggerimento disponibile"}
+                    aria-label={item.hint ? "Suggerimento disponibile" : "Nessun suggerimento disponibile"}
+                  >
+                    <FaLightbulb aria-hidden="true" />
+                    {!item.hint && <FaSlash className="hint-status-slash" aria-hidden="true" />}
+                  </span>
                 </div>
               );
             })}
