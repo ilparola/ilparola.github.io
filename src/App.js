@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import Timer from "./components/timer";
 import Settings from "./components/settings";
 import Dictionary from "./components/dictionary";
-import { getGeneratedWords, getCapturedWords, getRaddoppi } from "./lib/dataProvider";
+import { getCapturedWords, getRaddoppi } from "./lib/dataProvider";
 import { getMuted, setMuted, playSound } from "./lib/soundManager";
 import { FaVolumeUp, FaVolumeMute, FaCog, FaBook } from "react-icons/fa";
 
@@ -18,8 +18,7 @@ function App() {
 
   // Inizializza le parole al primo caricamento
   useEffect(() => {
-    const defaultWords = getGeneratedWords(false).concat(getCapturedWords(false));
-    setWords(defaultWords);
+    setWords(getCapturedWords(false));
     const timer = setTimeout(() => {
       playSound("intro");
     }, 500);
@@ -35,11 +34,7 @@ function App() {
     let loadedWords = [];
     if (option === "raddoppi") {
       loadedWords = getRaddoppi();
-    } else if (option === "all") {
-      loadedWords = getGeneratedWords(isDuplicate).concat(getCapturedWords(isDuplicate));
-    } else if (option === "generated") {
-      loadedWords = getGeneratedWords(isDuplicate);
-    } else if (option === "captured") {
+    } else if (option === "all" || option === "captured") {
       loadedWords = getCapturedWords(isDuplicate);
     }
     setWords(loadedWords);
@@ -68,22 +63,26 @@ function App() {
       <header className="app-header animate-slide-down">
         <div className="app-title-group">
           <div className="app-logo-badge"></div>
-          <h1 className="app-title" style={{ cursor: "pointer" }} onClick={() => setView("game")}>
+          <h1
+            className="app-title"
+            style={{ cursor: "pointer" }}
+            onClick={() => setView("game")}
+          >
             Intesa Vincente
           </h1>
         </div>
         <div className="app-header-controls">
-          <button 
+          <button
             className={`btn btn-dark btn-icon-only ${view === "dictionary" ? "btn-primary" : ""}`}
             onClick={handleToggleView}
             title={view === "game" ? "Vedi Archivio Parole" : "Torna al Gioco"}
           >
             <FaBook size={18} />
           </button>
-          
+
           {view === "game" && (
-            <button 
-              className={`btn btn-dark btn-icon-only ${isSettingsOpen ? 'btn-primary' : ''}`}
+            <button
+              className={`btn btn-dark btn-icon-only ${isSettingsOpen ? "btn-primary" : ""}`}
               onClick={() => setIsSettingsOpen(!isSettingsOpen)}
               title="Impostazioni"
             >
@@ -91,31 +90,34 @@ function App() {
             </button>
           )}
 
-          <button 
-            className="btn btn-dark btn-icon-only" 
+          <button
+            className="btn btn-dark btn-icon-only"
             onClick={toggleMute}
             title={muted ? "Riattiva Audio" : "Disattiva Audio"}
           >
-            {muted ? <FaVolumeMute size={18} style={{color: 'var(--color-danger)'}} /> : <FaVolumeUp size={18} />}
+            {muted ? (
+              <FaVolumeMute
+                size={18}
+                style={{ color: "var(--color-danger)" }}
+              />
+            ) : (
+              <FaVolumeUp size={18} />
+            )}
           </button>
         </div>
       </header>
 
       {view === "game" ? (
         <>
-          <Settings 
-            isOpen={isSettingsOpen} 
-            onApply={applySettings} 
-            defaultTime={time} 
+          <Settings
+            isOpen={isSettingsOpen}
+            onApply={applySettings}
+            defaultTime={time}
             currentOption={dictionaryOption}
             currentRemoveDuplicate={removeDuplicate}
           />
-          
-          <Timer 
-            startingTime={time} 
-            words={words} 
-            isMuted={muted} 
-          />
+
+          <Timer startingTime={time} words={words} isMuted={muted} />
         </>
       ) : (
         <Dictionary onClose={() => setView("game")} />
