@@ -1,19 +1,26 @@
 import { useState, useMemo } from "react";
 import { FaSearch, FaBook, FaArrowLeft } from "react-icons/fa";
-import { getCapturedWords, getRaddoppi } from "../lib/dataProvider";
+import { getCapturedWords, getRaddoppi, getWordHint } from "../lib/dataProvider";
+import HintModal from "./hintModal";
 
 const Dictionary = ({ onClose }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState("all"); // all, captured
   const [selectedLetter, setSelectedLetter] = useState("");
+  const [selectedHint, setSelectedHint] = useState(null);
 
   // Carica ed unisci le parole contrassegnandole con la sorgente
   const allWords = useMemo(() => {
     const cap = getCapturedWords(true).map((w) => ({
       word: w,
       type: "captured",
+      hint: getWordHint(w),
     }));
-    const doubles = getRaddoppi().map((w) => ({ word: w, type: "raddoppi" }));
+    const doubles = getRaddoppi().map((w) => ({
+      word: w,
+      type: "raddoppi",
+      hint: getWordHint(w),
+    }));
     const merged = [...cap, ...doubles];
 
     // Ordina alfabeticamente
@@ -291,7 +298,11 @@ const Dictionary = ({ onClose }) => {
                   }}
                   className="word-card-hover"
                 >
-                  <span
+                  <button
+                    className="dictionary-word-button"
+                    onClick={() => setSelectedHint(item)}
+                    title={item.hint || "Nessun suggerimento disponibile"}
+                    aria-label={`Mostra il suggerimento per ${item.word}`}
                     style={{
                       fontWeight: 600,
                       fontSize: "0.9rem",
@@ -299,7 +310,7 @@ const Dictionary = ({ onClose }) => {
                     }}
                   >
                     {item.word.toUpperCase()}
-                  </span>
+                  </button>
                   <span
                     style={{
                       fontSize: "0.6rem",
@@ -330,6 +341,13 @@ const Dictionary = ({ onClose }) => {
           </div>
         )}
       </div>
+
+      <HintModal
+        isOpen={Boolean(selectedHint)}
+        word={selectedHint?.word}
+        hint={selectedHint?.hint}
+        onClose={() => setSelectedHint(null)}
+      />
     </div>
   );
 };

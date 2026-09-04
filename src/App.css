@@ -361,6 +361,23 @@ body {
   max-width: 100%;
 }
 
+.hint-button {
+  margin-top: 1.25rem;
+}
+
+.dictionary-word-button {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+}
+
+.dictionary-word-button:hover {
+  color: var(--color-primary) !important;
+  text-decoration: underline;
+}
+
 .word-placeholder {
   font-size: 1.5rem;
   font-weight: 600;
@@ -750,6 +767,42 @@ body {
   padding: 2rem 1.5rem;
   overflow-y: auto;
   flex-grow: 1;
+}
+
+.hint-modal-card {
+  max-width: 460px;
+}
+
+.hint-modal-card .modal-card-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.hint-modal-body {
+  text-align: center;
+}
+
+.hint-word {
+  display: block;
+  color: var(--color-primary);
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  margin-bottom: 1rem;
+}
+
+.hint-text,
+.hint-empty {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.hint-empty {
+  color: var(--color-text-muted);
+  font-style: italic;
 }
 
 /* Stats Dashboard in Modal */

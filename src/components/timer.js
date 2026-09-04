@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import SummaryModal from "./summaryModal";
+import HintModal from "./hintModal";
 import { playSound } from "../lib/soundManager";
-import { FaPlay, FaPause, FaRedo, FaPlus, FaMinus, FaChevronUp, FaKeyboard } from "react-icons/fa";
+import { getWordHint } from "../lib/dataProvider";
+import { FaPlay, FaPause, FaRedo, FaPlus, FaMinus, FaChevronUp, FaKeyboard, FaLightbulb } from "react-icons/fa";
 
 function Timer({ words, startingTime }) {
   const [time, setTime] = useState(startingTime);
@@ -14,6 +16,7 @@ function Timer({ words, startingTime }) {
   const [errors, setErrors] = useState([]);
   const [endGame, setEndGame] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isHintModalOpen, setIsHintModalOpen] = useState(false);
 
   const lastTickRef = useRef(10);
 
@@ -240,6 +243,14 @@ function Timer({ words, startingTime }) {
               {isPaused ? "Tempo in Pausa - Conferma Risposta" : "Tempo in Corso - Descrivi la parola"}
             </span>
             <div className="word-display animate-fade-in">{word.toUpperCase()}</div>
+            <button
+              className="btn btn-primary hint-button"
+              onClick={() => setIsHintModalOpen(true)}
+              title="Mostra il suggerimento"
+              aria-label={`Mostra il suggerimento per ${word}`}
+            >
+              <FaLightbulb /> SUGGERIMENTO
+            </button>
           </>
         ) : (
           <div className="word-placeholder">
@@ -386,6 +397,13 @@ function Timer({ words, startingTime }) {
         guessedWords={guessedWords}
         errorWords={errors}
         passedWords={passedWords}
+      />
+
+      <HintModal
+        isOpen={isHintModalOpen}
+        word={word}
+        hint={getWordHint(word)}
+        onClose={() => setIsHintModalOpen(false)}
       />
     </div>
   );
