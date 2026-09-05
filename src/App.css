@@ -376,6 +376,12 @@ body {
   margin-top: 1.25rem;
 }
 
+.word-index {
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+}
+
 .dictionary-word-button {
   background: transparent;
   border: 0;

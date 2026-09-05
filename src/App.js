@@ -14,28 +14,31 @@ function App() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [view, setView] = useState("game"); // 'game' o 'dictionary'
   const [dictionaryOption, setDictionaryOption] = useState("all");
-  const [removeDuplicate, setRemoveDuplicate] = useState(false);
+  const [gameMode, setGameMode] = useState("random");
+  const [startIndex, setStartIndex] = useState(0);
 
   // Inizializza le parole al primo caricamento
   useEffect(() => {
-    setWords(getCapturedWords(false));
+    setWords(getCapturedWords());
     const timer = setTimeout(() => {
       playSound("intro");
     }, 500);
     return () => clearTimeout(timer);
   }, []);
 
-  function applySettings({ number, option, isDuplicate }) {
+  function applySettings({ number, option, mode, startIndex: nextStartIndex }) {
     const finalTime = number > 0 ? Number(number) : 60;
+    const finalStartIndex = Math.max(0, Number(nextStartIndex) || 0);
     setTime(finalTime);
     setDictionaryOption(option);
-    setRemoveDuplicate(isDuplicate);
+    setGameMode(mode);
+    setStartIndex(finalStartIndex);
 
     let loadedWords = [];
     if (option === "raddoppi") {
       loadedWords = getRaddoppi();
     } else if (option === "all" || option === "captured") {
-      loadedWords = getCapturedWords(isDuplicate);
+      loadedWords = getCapturedWords();
     }
     setWords(loadedWords);
     setIsSettingsOpen(false);
@@ -114,10 +117,18 @@ function App() {
             onApply={applySettings}
             defaultTime={time}
             currentOption={dictionaryOption}
-            currentRemoveDuplicate={removeDuplicate}
+            currentMode={gameMode}
+            currentStartIndex={startIndex}
+            wordCount={words.length}
           />
 
-          <Timer startingTime={time} words={words} isMuted={muted} />
+          <Timer
+            startingTime={time}
+            words={words}
+            isMuted={muted}
+            mode={gameMode}
+            startIndex={startIndex}
+          />
         </>
       ) : (
         <Dictionary onClose={() => setView("game")} />

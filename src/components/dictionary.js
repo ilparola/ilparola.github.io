@@ -21,7 +21,7 @@ const Dictionary = ({ onClose }) => {
 
   // Carica ed unisci le parole contrassegnandole con la sorgente
   const allWords = useMemo(() => {
-    const cap = getCapturedWords(true).map((w) => ({
+    const cap = getCapturedWords().map((w) => ({
       word: w,
       type: "captured",
       hint: getWordHint(w),

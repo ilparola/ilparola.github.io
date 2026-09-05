@@ -2,10 +2,7 @@ import { capturedWords } from "../data/capturedWords";
 import { raddoppi } from "../data/raddoppi";
 import { getWordHint } from "../data/wordHints";
 
-export const getCapturedWords = (removeDuplicate = false) => {
-  if (removeDuplicate) {
-    return [...new Set(capturedWords)];
-  }
+export const getCapturedWords = () => {
   return capturedWords;
 };
 

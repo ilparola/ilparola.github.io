@@ -14,7 +14,7 @@ import {
   FaLightbulb,
 } from "react-icons/fa";
 
-function Timer({ words, startingTime }) {
+function Timer({ words, startingTime, mode = "random", startIndex = 0 }) {
   const [time, setTime] = useState(startingTime);
   const [startTime, setStartTime] = useState(null);
   const [isPaused, setIsPaused] = useState(true);
@@ -26,8 +26,10 @@ function Timer({ words, startingTime }) {
   const [endGame, setEndGame] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isHintModalOpen, setIsHintModalOpen] = useState(false);
+  const [wordIndex, setWordIndex] = useState(null);
 
   const lastTickRef = useRef(10);
+  const sequenceIndexRef = useRef(startIndex);
 
   const cantPass = useCallback(() => {
     return !word || word === "" || passedWords.length === 3;
@@ -64,6 +66,20 @@ function Timer({ words, startingTime }) {
     lastTickRef.current = 10;
   }, [startingTime]);
 
+  useEffect(() => {
+    sequenceIndexRef.current = startIndex;
+    setIsPaused(true);
+    setWord("");
+    setWordIndex(null);
+    setGuessedWords([]);
+    setPassedWords([]);
+    setErrors([]);
+    setScore(0);
+    setEndGame(false);
+    setIsModalOpen(false);
+    setIsHintModalOpen(false);
+  }, [words, mode, startIndex, startingTime]);
+
   // Effetto sonoro per i secondi finali (ultimi 10s)
   useEffect(() => {
     if (isPaused) return;
@@ -84,32 +100,35 @@ function Timer({ words, startingTime }) {
     playSound("buzzer");
 
     if (isPaused) {
-      // Sta riprendendo o iniziando
-      const unusedWords = words.filter(
-        (w) =>
-          !guessedWords.some((g) => g.word === w) &&
-          !errors.some((e) => e.word === w) &&
-          !passedWords.some((p) => p.word === w),
-      );
-
       let selectedWord = "";
-      if (unusedWords.length > 0) {
-        const randomIndex = Math.floor(Math.random() * unusedWords.length);
-        selectedWord = unusedWords[randomIndex];
+      let selectedIndex = null;
+      if (words.length > 0 && mode === "sequential") {
+        selectedIndex = sequenceIndexRef.current % words.length;
+        selectedWord = words[selectedIndex];
+        sequenceIndexRef.current = (selectedIndex + 1) % words.length;
       } else {
-        // Fallback se le parole sono finite
-        const randomIndex = Math.floor(Math.random() * words.length);
-        selectedWord = words[randomIndex];
+        const unusedWords = words.filter(
+          (w) =>
+            !guessedWords.some((g) => g.word === w) &&
+            !errors.some((e) => e.word === w) &&
+            !passedWords.some((p) => p.word === w),
+        );
+        const pool = unusedWords.length > 0 ? unusedWords : words;
+        if (pool.length > 0) {
+          selectedWord = pool[Math.floor(Math.random() * pool.length)];
+          selectedIndex = words.indexOf(selectedWord);
+        }
       }
 
       setWord(selectedWord);
+      setWordIndex(selectedIndex);
       setStartTime(time);
       setIsPaused(false);
     } else {
       // Si mette in pausa per rispondere
       setIsPaused(true);
     }
-  }, [isPaused, time, words, guessedWords, errors, passedWords, endGame]);
+  }, [isPaused, time, words, guessedWords, errors, passedWords, endGame, mode]);
 
   const handlePasso = useCallback(() => {
     if (endGame || cantPass()) return;
@@ -197,11 +216,13 @@ function Timer({ words, startingTime }) {
     setErrors([]);
     setPassedWords([]);
     setWord("");
+    setWordIndex(null);
     setScore(0);
     setTime(startingTime);
     setEndGame(false);
+    sequenceIndexRef.current = startIndex;
     lastTickRef.current = 10;
-  }, [startingTime]);
+  }, [startingTime, startIndex]);
 
   // Registrazione delle scorciatoie da tastiera
   useEffect(() => {
@@ -323,6 +344,7 @@ function Timer({ words, startingTime }) {
             <div className="word-display animate-fade-in">
               {word.toUpperCase()}
             </div>
+            <div className="word-index">Indice: {wordIndex}</div>
             <button
               className="btn btn-primary hint-button"
               onClick={() => setIsHintModalOpen(true)}

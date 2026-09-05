@@ -7,13 +7,14 @@ const Settings = ({
   onApply,
   defaultTime,
   currentOption,
-  currentRemoveDuplicate,
+  currentMode,
+  currentStartIndex,
+  wordCount,
 }) => {
   const [number, setNumber] = useState(defaultTime || 60);
   const [option, setOption] = useState(currentOption || "all");
-  const [removeDuplicate, setRemoveDuplicate] = useState(
-    currentRemoveDuplicate || false,
-  );
+  const [mode, setMode] = useState(currentMode || "random");
+  const [startIndex, setStartIndex] = useState(currentStartIndex || 0);
 
   useEffect(() => {
     if (defaultTime) {
@@ -28,13 +29,15 @@ const Settings = ({
   }, [currentOption]);
 
   useEffect(() => {
-    if (currentRemoveDuplicate !== undefined) {
-      setRemoveDuplicate(currentRemoveDuplicate);
-    }
-  }, [currentRemoveDuplicate]);
+    if (currentMode) setMode(currentMode);
+  }, [currentMode]);
+
+  useEffect(() => {
+    if (currentStartIndex !== undefined) setStartIndex(currentStartIndex);
+  }, [currentStartIndex]);
 
   const handleApply = () => {
-    onApply({ number: Number(number), option, isDuplicate: removeDuplicate });
+    onApply({ number: Number(number), option, mode, startIndex: Number(startIndex) });
   };
 
   const setPresetTime = (secs) => {
@@ -114,15 +117,30 @@ const Settings = ({
         </div>
 
         <div className="field">
-          <label className="checkbox-custom">
-            <input
-              type="checkbox"
-              checked={removeDuplicate}
-              onChange={(e) => setRemoveDuplicate(e.target.checked)}
-            />
-            Elimina doppioni
-          </label>
+          <label>Ordine delle parole</label>
+          <select
+            className="select-custom"
+            value={mode}
+            onChange={(e) => setMode(e.target.value)}
+          >
+            <option value="random">Casuale</option>
+            <option value="sequential">In sequenza</option>
+          </select>
         </div>
+
+        {mode === "sequential" && (
+          <div className="field">
+            <label>Indice di partenza (0 - {Math.max(0, wordCount - 1)})</label>
+            <input
+              className="input-custom"
+              type="number"
+              min="0"
+              max={Math.max(0, wordCount - 1)}
+              value={startIndex}
+              onChange={(e) => setStartIndex(e.target.value)}
+            />
+          </div>
+        )}
 
         <div className="field">
           {option === "raddoppi" && (
@@ -139,19 +157,6 @@ const Settings = ({
               ⚡ Modalità Raddoppi: le parole composte sono <b>esclusive</b> e
               non vengono mescolate con gli altri elenchi.
             </div>
-          )}
-        </div>
-
-        <div className="field">
-          {option !== "raddoppi" && (
-            <label className="checkbox-custom">
-              <input
-                type="checkbox"
-                checked={removeDuplicate}
-                onChange={(e) => setRemoveDuplicate(e.target.checked)}
-              />
-              Elimina doppioni
-            </label>
           )}
         </div>
 
