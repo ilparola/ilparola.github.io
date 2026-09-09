@@ -18,7 +18,7 @@ import {
 function Timer({
   words,
   startingTime,
-  mode = "random",
+  mode = "sequential",
   startIndex = 0,
   nextStartIndex = startIndex,
   raddoppiWords = [],

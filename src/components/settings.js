@@ -11,7 +11,7 @@ const Settings = ({
   wordCount,
 }) => {
   const [number, setNumber] = useState(defaultTime || 60);
-  const [mode, setMode] = useState(currentMode || "random");
+  const [mode, setMode] = useState(currentMode || "sequential");
   const [startIndex, setStartIndex] = useState(currentStartIndex || 0);
 
   useEffect(() => {

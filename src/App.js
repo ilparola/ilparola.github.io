@@ -14,7 +14,7 @@ function App() {
   const [muted, setMutedState] = useState(getMuted());
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [view, setView] = useState("game"); // 'game' o 'dictionary'
-  const [gameMode, setGameMode] = useState("random");
+  const [gameMode, setGameMode] = useState("sequential");
   const [lastSequenceIndex, setLastSequenceIndex] = useState(getLastSequenceIndex());
   const [startIndex, setStartIndex] = useState(() => {
     const lastIndex = getLastSequenceIndex();
