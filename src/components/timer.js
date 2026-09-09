@@ -33,6 +33,7 @@ function Timer({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isHintModalOpen, setIsHintModalOpen] = useState(false);
   const [wordIndex, setWordIndex] = useState(null);
+  const [isRaddoppioActive, setIsRaddoppioActive] = useState(false);
   const [usedRaddoppi, setUsedRaddoppi] = useState([]);
 
   const lastTickRef = useRef(10);
@@ -82,6 +83,7 @@ function Timer({
     setPassedWords([]);
     setErrors([]);
     setScore(0);
+    setIsRaddoppioActive(false);
     setUsedRaddoppi([]);
     setEndGame(false);
     setIsModalOpen(false);
@@ -130,6 +132,7 @@ function Timer({
 
       setWord(selectedWord);
       setWordIndex(selectedIndex);
+      setIsRaddoppioActive(false);
       setStartTime(time);
       setIsPaused(false);
     } else {
@@ -160,6 +163,7 @@ function Timer({
     setUsedRaddoppi((previous) => [...previous, selectedRaddoppio]);
     setWord(selectedRaddoppio);
     setWordIndex(null);
+    setIsRaddoppioActive(true);
     setStartTime(time);
     setIsPaused(false);
   }, [
@@ -209,7 +213,7 @@ function Timer({
     }
 
     playSound("correct");
-    setScore((prevScore) => prevScore + 1);
+    setScore((prevScore) => prevScore + (isRaddoppioActive ? 2 : 1));
     setGuessedWords((prev) => [
       ...prev,
       { word: word, time: startTime - time },
@@ -223,6 +227,7 @@ function Timer({
     passedWords,
     endGame,
     isPaused,
+    isRaddoppioActive,
   ]);
 
   const handleSubtractScore = useCallback(() => {
@@ -237,7 +242,9 @@ function Timer({
     }
 
     playSound("incorrect");
-    setScore((prevScore) => (prevScore > 0 ? prevScore - 1 : 0));
+    setScore((prevScore) =>
+      Math.max(0, prevScore - (isRaddoppioActive ? 2 : 1)),
+    );
     setErrors((prev) => [...prev, { word: word, time: startTime - time }]);
   }, [
     word,
@@ -248,6 +255,7 @@ function Timer({
     passedWords,
     endGame,
     isPaused,
+    isRaddoppioActive,
   ]);
 
   const handleReset = useCallback(() => {
@@ -258,6 +266,7 @@ function Timer({
     setPassedWords([]);
     setWord("");
     setWordIndex(null);
+    setIsRaddoppioActive(false);
     setScore(0);
     setUsedRaddoppi([]);
     setTime(startingTime);
