@@ -13,7 +13,6 @@ function App() {
   const [muted, setMutedState] = useState(getMuted());
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [view, setView] = useState("game"); // 'game' o 'dictionary'
-  const [dictionaryOption, setDictionaryOption] = useState("all");
   const [gameMode, setGameMode] = useState("random");
   const [startIndex, setStartIndex] = useState(0);
 
@@ -26,21 +25,14 @@ function App() {
     return () => clearTimeout(timer);
   }, []);
 
-  function applySettings({ number, option, mode, startIndex: nextStartIndex }) {
+  function applySettings({ number, mode, startIndex: nextStartIndex }) {
     const finalTime = number > 0 ? Number(number) : 60;
     const finalStartIndex = Math.max(0, Number(nextStartIndex) || 0);
     setTime(finalTime);
-    setDictionaryOption(option);
     setGameMode(mode);
     setStartIndex(finalStartIndex);
 
-    let loadedWords = [];
-    if (option === "raddoppi") {
-      loadedWords = getRaddoppi();
-    } else if (option === "all" || option === "captured") {
-      loadedWords = getCapturedWords();
-    }
-    setWords(loadedWords);
+    setWords(getCapturedWords());
     setIsSettingsOpen(false);
     playSound("correct");
   }
@@ -116,7 +108,6 @@ function App() {
             isOpen={isSettingsOpen}
             onApply={applySettings}
             defaultTime={time}
-            currentOption={dictionaryOption}
             currentMode={gameMode}
             currentStartIndex={startIndex}
             wordCount={words.length}
@@ -128,6 +119,7 @@ function App() {
             isMuted={muted}
             mode={gameMode}
             startIndex={startIndex}
+            raddoppiWords={getRaddoppi()}
           />
         </>
       ) : (

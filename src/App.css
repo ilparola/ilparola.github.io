@@ -533,7 +533,7 @@ body {
 
 .controls-row-primary {
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 2fr 1fr 1fr;
   gap: 1rem;
   margin-bottom: 1.25rem;
 }
@@ -567,6 +567,12 @@ body {
 .btn-passo {
   font-size: 1.2rem;
   padding: 1.25rem 1.5rem;
+  border-radius: 12px;
+}
+
+.btn-raddoppio {
+  font-size: 1.1rem;
+  padding: 1.25rem 1rem;
   border-radius: 12px;
 }
 

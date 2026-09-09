@@ -14,7 +14,13 @@ import {
   FaLightbulb,
 } from "react-icons/fa";
 
-function Timer({ words, startingTime, mode = "random", startIndex = 0 }) {
+function Timer({
+  words,
+  startingTime,
+  mode = "random",
+  startIndex = 0,
+  raddoppiWords = [],
+}) {
   const [time, setTime] = useState(startingTime);
   const [startTime, setStartTime] = useState(null);
   const [isPaused, setIsPaused] = useState(true);
@@ -27,6 +33,7 @@ function Timer({ words, startingTime, mode = "random", startIndex = 0 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isHintModalOpen, setIsHintModalOpen] = useState(false);
   const [wordIndex, setWordIndex] = useState(null);
+  const [usedRaddoppi, setUsedRaddoppi] = useState([]);
 
   const lastTickRef = useRef(10);
   const sequenceIndexRef = useRef(startIndex);
@@ -75,6 +82,7 @@ function Timer({ words, startingTime, mode = "random", startIndex = 0 }) {
     setPassedWords([]);
     setErrors([]);
     setScore(0);
+    setUsedRaddoppi([]);
     setEndGame(false);
     setIsModalOpen(false);
     setIsHintModalOpen(false);
@@ -129,6 +137,39 @@ function Timer({ words, startingTime, mode = "random", startIndex = 0 }) {
       setIsPaused(true);
     }
   }, [isPaused, time, words, guessedWords, errors, passedWords, endGame, mode]);
+
+  const handleRaddoppio = useCallback(() => {
+    if (
+      endGame ||
+      !isPaused ||
+      score < 2 ||
+      usedRaddoppi.length >= 2 ||
+      raddoppiWords.length === 0
+    ) {
+      return;
+    }
+
+    const availableRaddoppi = raddoppiWords.filter(
+      (raddoppio) => !usedRaddoppi.includes(raddoppio),
+    );
+    if (availableRaddoppi.length === 0) return;
+
+    const selectedRaddoppio =
+      availableRaddoppi[Math.floor(Math.random() * availableRaddoppi.length)];
+    playSound("buzzer");
+    setUsedRaddoppi((previous) => [...previous, selectedRaddoppio]);
+    setWord(selectedRaddoppio);
+    setWordIndex(null);
+    setStartTime(time);
+    setIsPaused(false);
+  }, [
+    endGame,
+    isPaused,
+    score,
+    usedRaddoppi,
+    raddoppiWords,
+    time,
+  ]);
 
   const handlePasso = useCallback(() => {
     if (endGame || cantPass()) return;
@@ -218,6 +259,7 @@ function Timer({ words, startingTime, mode = "random", startIndex = 0 }) {
     setWord("");
     setWordIndex(null);
     setScore(0);
+    setUsedRaddoppi([]);
     setTime(startingTime);
     setEndGame(false);
     sequenceIndexRef.current = startIndex;
@@ -265,6 +307,7 @@ function Timer({ words, startingTime, mode = "random", startIndex = 0 }) {
     };
   }, [
     handleBuzz,
+    handleRaddoppio,
     handleAddScore,
     handleSubtractScore,
     handlePasso,
@@ -380,6 +423,20 @@ function Timer({ words, startingTime, mode = "random", startIndex = 0 }) {
               <FaPause style={{ fontSize: "1.1rem" }} />
             )}
             {isPaused ? "BUZZER / VIA" : "BUZZER / PAUSA"}
+          </button>
+
+          <button
+            className="btn btn-accent btn-raddoppio"
+            onClick={handleRaddoppio}
+            disabled={
+              endGame ||
+              !isPaused ||
+              score < 2 ||
+              usedRaddoppi.length >= 2
+            }
+            title="Disponibile con almeno 2 punti, massimo 2 volte per partita"
+          >
+            RADDOPPIO
           </button>
 
           <button

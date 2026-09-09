@@ -6,13 +6,11 @@ const Settings = ({
   isOpen,
   onApply,
   defaultTime,
-  currentOption,
   currentMode,
   currentStartIndex,
   wordCount,
 }) => {
   const [number, setNumber] = useState(defaultTime || 60);
-  const [option, setOption] = useState(currentOption || "all");
   const [mode, setMode] = useState(currentMode || "random");
   const [startIndex, setStartIndex] = useState(currentStartIndex || 0);
 
@@ -23,12 +21,6 @@ const Settings = ({
   }, [defaultTime]);
 
   useEffect(() => {
-    if (currentOption) {
-      setOption(currentOption);
-    }
-  }, [currentOption]);
-
-  useEffect(() => {
     if (currentMode) setMode(currentMode);
   }, [currentMode]);
 
@@ -37,7 +29,11 @@ const Settings = ({
   }, [currentStartIndex]);
 
   const handleApply = () => {
-    onApply({ number: Number(number), option, mode, startIndex: Number(startIndex) });
+    onApply({
+      number: Number(number),
+      mode,
+      startIndex: Number(startIndex),
+    });
   };
 
   const setPresetTime = (secs) => {
@@ -104,19 +100,6 @@ const Settings = ({
         </div>
 
         <div className="field">
-          <label>Dizionario Parole</label>
-          <select
-            className="select-custom"
-            value={option}
-            onChange={(e) => setOption(e.target.value)}
-          >
-            <option value="all">Tutte le parole (esclusi raddoppi)</option>
-            <option value="captured">Solo TV (dalla trasmissione)</option>
-            <option value="raddoppi">Solo Raddoppi (parole composte)</option>
-          </select>
-        </div>
-
-        <div className="field">
           <label>Ordine delle parole</label>
           <select
             className="select-custom"
@@ -141,24 +124,6 @@ const Settings = ({
             />
           </div>
         )}
-
-        <div className="field">
-          {option === "raddoppi" && (
-            <div
-              style={{
-                padding: "0.5rem 0.75rem",
-                background: "rgba(255, 159, 67, 0.1)",
-                border: "1px solid rgba(255, 159, 67, 0.3)",
-                borderRadius: "8px",
-                fontSize: "0.8rem",
-                color: "var(--color-accent)",
-              }}
-            >
-              ⚡ Modalità Raddoppi: le parole composte sono <b>esclusive</b> e
-              non vengono mescolate con gli altri elenchi.
-            </div>
-          )}
-        </div>
 
         <div className="field">
           <button
