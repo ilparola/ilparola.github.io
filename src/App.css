@@ -527,15 +527,34 @@ body {
 
 .sequence-progress {
   display: inline-flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  min-width: 92px;
   min-height: 42px;
-  padding: 0 0.75rem;
-  border: 1px solid var(--panel-border);
-  border-radius: 8px;
-  color: var(--color-text-muted);
-  font-size: 0.75rem;
-  font-weight: 700;
+  padding: 0.35rem 0.75rem;
+  border-left: 3px solid var(--color-primary);
+  border-radius: 4px;
+  background: rgba(0, 210, 255, 0.08);
+  box-shadow: 0 0 18px rgba(0, 210, 255, 0.12);
   white-space: nowrap;
+}
+
+.sequence-progress-label {
+  color: var(--color-text-muted);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.7px;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.sequence-progress-value {
+  color: var(--color-primary);
+  font-family: var(--font-digital);
+  font-size: 1.25rem;
+  line-height: 1.1;
+  text-shadow: 0 0 10px var(--color-primary-glow);
 }
 
 /* Controls Grid */

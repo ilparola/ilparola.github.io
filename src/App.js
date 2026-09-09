@@ -88,6 +88,16 @@ function App() {
           </h1>
         </div>
         <div className="app-header-controls">
+          <span
+            className="sequence-progress"
+            title="Ultimo indice sequenziale della partita conclusa"
+          >
+            <span className="sequence-progress-label">Ultimo indice</span>
+            <strong className="sequence-progress-value">
+              {lastSequenceIndex === null ? "-" : lastSequenceIndex}
+            </strong>
+          </span>
+
           <button
             className={`btn btn-dark btn-icon-only ${view === "dictionary" ? "btn-primary" : ""}`}
             onClick={handleToggleView}
@@ -95,13 +105,6 @@ function App() {
           >
             <FaBook size={18} />
           </button>
-
-          <span
-            className="sequence-progress"
-            title="Ultimo indice sequenziale della partita conclusa"
-          >
-            Ultimo indice: {lastSequenceIndex === null ? "-" : lastSequenceIndex}
-          </span>
 
           {view === "game" && (
             <button
