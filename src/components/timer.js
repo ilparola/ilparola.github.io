@@ -136,9 +136,7 @@ function Timer({
       const responseTime = startTime - time;
       if (decision === "correct") {
         playSound("correct");
-        setScore((prevScore) =>
-          prevScore + (isRaddoppioActive ? 2 : 1),
-        );
+        setScore((prevScore) => prevScore + (isRaddoppioActive ? 2 : 1));
         setGuessedWords((prev) => [...prev, { word, time: responseTime }]);
       } else if (decision === "error") {
         playSound("incorrect");
@@ -147,15 +145,8 @@ function Timer({
         );
         setErrors((prev) => [...prev, { word, time: responseTime }]);
       }
-
     },
-    [
-      word,
-      finalWordStatus,
-      startTime,
-      time,
-      isRaddoppioActive,
-    ],
+    [word, finalWordStatus, startTime, time, isRaddoppioActive],
   );
 
   const handleBuzz = useCallback(() => {

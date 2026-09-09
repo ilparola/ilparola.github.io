@@ -15,7 +15,9 @@ function App() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [view, setView] = useState("game"); // 'game' o 'dictionary'
   const [gameMode, setGameMode] = useState("sequential");
-  const [lastSequenceIndex, setLastSequenceIndex] = useState(getLastSequenceIndex());
+  const [lastSequenceIndex, setLastSequenceIndex] = useState(
+    getLastSequenceIndex(),
+  );
   const [startIndex, setStartIndex] = useState(() => {
     const lastIndex = getLastSequenceIndex();
     const wordCount = getCapturedWords().length;
@@ -69,10 +71,13 @@ function App() {
     playSound("passo");
   };
 
-  const handleSequentialGameEnd = useCallback((completedIndex) => {
-    setLastSequenceIndex(completedIndex);
-    setNextStartIndex((completedIndex + 1) % words.length);
-  }, [words.length]);
+  const handleSequentialGameEnd = useCallback(
+    (completedIndex) => {
+      setLastSequenceIndex(completedIndex);
+      setNextStartIndex((completedIndex + 1) % words.length);
+    },
+    [words.length],
+  );
 
   return (
     <div className="App">
