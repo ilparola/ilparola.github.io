@@ -11,6 +11,7 @@ const SummaryModal = ({
   passedWords = [],
   finalWord = "",
   finalWordStatus = null,
+  onFinalWordDecision,
 }) => {
   const componentRef = useRef();
   
@@ -124,6 +125,36 @@ const SummaryModal = ({
                     ? "Errato"
                     : "Non risposto"}
               </div>
+              {finalWordStatus === "unanswered" && (
+                <div
+                  style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    justifyContent: "center",
+                    gap: "0.5rem",
+                    marginTop: "1rem",
+                  }}
+                >
+                  <button
+                    className="btn btn-success"
+                    onClick={() => onFinalWordDecision?.("correct")}
+                  >
+                    <FaCheck /> CORRETTO
+                  </button>
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => onFinalWordDecision?.("error")}
+                  >
+                    <FaBan /> ERRATO
+                  </button>
+                  <button
+                    className="btn btn-dark"
+                    onClick={() => onFinalWordDecision?.("unanswered")}
+                  >
+                    <FaArrowRight /> LASCIA NON RISPOSTA
+                  </button>
+                </div>
+              )}
             </div>
           )}
 

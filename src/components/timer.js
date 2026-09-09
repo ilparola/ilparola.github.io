@@ -110,9 +110,53 @@ function Timer({
     }
   }, [time, isPaused]);
 
+  const finalWordStatus = word
+    ? guessedWords.some((item) => item.word === word)
+      ? "correct"
+      : errors.some((item) => item.word === word)
+        ? "error"
+        : passedWords.some((item) => item.word === word)
+          ? "passed"
+          : "unanswered"
+    : null;
+
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
+
+  const handleFinalWordDecision = useCallback(
+    (decision) => {
+      if (!word || finalWordStatus !== "unanswered") return;
+
+      if (decision === "unanswered") {
+        setIsModalOpen(false);
+        return;
+      }
+
+      const responseTime = startTime - time;
+      if (decision === "correct") {
+        playSound("correct");
+        setScore((prevScore) =>
+          prevScore + (isRaddoppioActive ? 2 : 1),
+        );
+        setGuessedWords((prev) => [...prev, { word, time: responseTime }]);
+      } else if (decision === "error") {
+        playSound("incorrect");
+        setScore((prevScore) =>
+          Math.max(0, prevScore - (isRaddoppioActive ? 2 : 1)),
+        );
+        setErrors((prev) => [...prev, { word, time: responseTime }]);
+      }
+
+    },
+    [
+      word,
+      finalWordStatus,
+      startTime,
+      time,
+      isRaddoppioActive,
+    ],
+  );
 
   const handleBuzz = useCallback(() => {
     if (endGame) return;
@@ -346,16 +390,6 @@ function Timer({
     startingTime > 0
       ? circumference - (time / startingTime) * circumference
       : circumference;
-  const finalWordStatus = word
-    ? guessedWords.some((item) => item.word === word)
-      ? "correct"
-      : errors.some((item) => item.word === word)
-        ? "error"
-        : passedWords.some((item) => item.word === word)
-          ? "passed"
-          : "unanswered"
-    : null;
-
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
       {/* Dashboard Row (Timer e Punteggio) */}
@@ -637,6 +671,7 @@ function Timer({
         passedWords={passedWords}
         finalWord={word}
         finalWordStatus={finalWordStatus}
+        onFinalWordDecision={handleFinalWordDecision}
       />
 
       <HintModal
