@@ -114,22 +114,6 @@ Per eseguire i test configurati:
 npm test -- --watchAll=false --passWithNoTests
 ```
 
-### Deploy su GitHub Pages
-
-Il repository pubblico e `intesa-vincente-trainer` e il sito e configurato come project site:
-
-```text
-https://ilparola.github.io/intesa-vincente-trainer/
-```
-
-Il comando di pubblicazione crea la build e la invia al branch `gh-pages`:
-
-```bash
-npm run deploy
-```
-
-La proprieta `homepage` in `package.json` deve rimanere coerente con il percorso del project site. Nelle impostazioni GitHub Pages il repository deve usare il branch `gh-pages` e la cartella `/ (root)`.
-
 ### Struttura principale
 
 ```text
@@ -268,22 +252,6 @@ Run the configured tests:
 ```bash
 npm test -- --watchAll=false --passWithNoTests
 ```
-
-### GitHub Pages deployment
-
-The repository is `intesa-vincente-trainer` and the application is deployed as a project site:
-
-```text
-https://ilparola.github.io/intesa-vincente-trainer/
-```
-
-The deployment command builds the app and publishes it to the `gh-pages` branch:
-
-```bash
-npm run deploy
-```
-
-The `homepage` property in `package.json` must match the project-site path. GitHub Pages should be configured to deploy from the `gh-pages` branch and the `/ (root)` folder.
 
 ### Main structure
 
