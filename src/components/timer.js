@@ -3,6 +3,7 @@ import SummaryModal from "./summaryModal";
 import HintModal from "./hintModal";
 import { playSound } from "../lib/soundManager";
 import { getWordHint } from "../lib/dataProvider";
+import { saveLastSequenceIndex } from "../lib/sequenceProgress";
 import {
   FaPlay,
   FaPause,
@@ -19,7 +20,9 @@ function Timer({
   startingTime,
   mode = "random",
   startIndex = 0,
+  nextStartIndex = startIndex,
   raddoppiWords = [],
+  onSequentialGameEnd,
 }) {
   const [time, setTime] = useState(startingTime);
   const [startTime, setStartTime] = useState(null);
@@ -38,6 +41,7 @@ function Timer({
 
   const lastTickRef = useRef(10);
   const sequenceIndexRef = useRef(startIndex);
+  const lastSequentialIndexRef = useRef(null);
 
   const cantPass = useCallback(() => {
     return !word || word === "" || passedWords.length === 3;
@@ -61,12 +65,16 @@ function Timer({
   // Fine del gioco
   useEffect(() => {
     if (time === 0 && !endGame) {
+      if (mode === "sequential" && lastSequentialIndexRef.current !== null) {
+        saveLastSequenceIndex(lastSequentialIndexRef.current);
+        onSequentialGameEnd?.(lastSequentialIndexRef.current);
+      }
       setEndGame(true);
       setIsPaused(true);
       playSound("timeup");
       setIsModalOpen(true);
     }
-  }, [time, endGame]);
+  }, [time, endGame, mode, onSequentialGameEnd]);
 
   // Reset del timer all'aggiornamento del tempo di partenza
   useEffect(() => {
@@ -76,6 +84,7 @@ function Timer({
 
   useEffect(() => {
     sequenceIndexRef.current = startIndex;
+    lastSequentialIndexRef.current = null;
     setIsPaused(true);
     setWord("");
     setWordIndex(null);
@@ -116,6 +125,7 @@ function Timer({
         selectedIndex = sequenceIndexRef.current % words.length;
         selectedWord = words[selectedIndex];
         sequenceIndexRef.current = (selectedIndex + 1) % words.length;
+        lastSequentialIndexRef.current = selectedIndex;
       } else {
         const unusedWords = words.filter(
           (w) =>
@@ -166,14 +176,7 @@ function Timer({
     setIsRaddoppioActive(true);
     setStartTime(time);
     setIsPaused(false);
-  }, [
-    endGame,
-    isPaused,
-    score,
-    usedRaddoppi,
-    raddoppiWords,
-    time,
-  ]);
+  }, [endGame, isPaused, score, usedRaddoppi, raddoppiWords, time]);
 
   const handlePasso = useCallback(() => {
     if (endGame || cantPass()) return;
@@ -271,9 +274,9 @@ function Timer({
     setUsedRaddoppi([]);
     setTime(startingTime);
     setEndGame(false);
-    sequenceIndexRef.current = startIndex;
+    sequenceIndexRef.current = nextStartIndex;
     lastTickRef.current = 10;
-  }, [startingTime, startIndex]);
+  }, [startingTime, nextStartIndex]);
 
   // Registrazione delle scorciatoie da tastiera
   useEffect(() => {
@@ -438,10 +441,7 @@ function Timer({
             className="btn btn-accent btn-raddoppio"
             onClick={handleRaddoppio}
             disabled={
-              endGame ||
-              !isPaused ||
-              score < 2 ||
-              usedRaddoppi.length >= 2
+              endGame || !isPaused || score < 2 || usedRaddoppi.length >= 2
             }
             title="Disponibile con almeno 2 punti, massimo 2 volte per partita"
           >

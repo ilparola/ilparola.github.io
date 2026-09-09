@@ -1,9 +1,10 @@
 import "./App.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Timer from "./components/timer";
 import Settings from "./components/settings";
 import Dictionary from "./components/dictionary";
 import { getCapturedWords, getRaddoppi } from "./lib/dataProvider";
+import { getLastSequenceIndex } from "./lib/sequenceProgress";
 import { getMuted, setMuted, playSound } from "./lib/soundManager";
 import { FaVolumeUp, FaVolumeMute, FaCog, FaBook } from "react-icons/fa";
 
@@ -14,7 +15,21 @@ function App() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [view, setView] = useState("game"); // 'game' o 'dictionary'
   const [gameMode, setGameMode] = useState("random");
-  const [startIndex, setStartIndex] = useState(0);
+  const [lastSequenceIndex, setLastSequenceIndex] = useState(getLastSequenceIndex());
+  const [startIndex, setStartIndex] = useState(() => {
+    const lastIndex = getLastSequenceIndex();
+    const wordCount = getCapturedWords().length;
+    return lastIndex === null || wordCount === 0
+      ? 0
+      : (lastIndex + 1) % wordCount;
+  });
+  const [nextStartIndex, setNextStartIndex] = useState(() => {
+    const lastIndex = getLastSequenceIndex();
+    const wordCount = getCapturedWords().length;
+    return lastIndex === null || wordCount === 0
+      ? 0
+      : (lastIndex + 1) % wordCount;
+  });
 
   // Inizializza le parole al primo caricamento
   useEffect(() => {
@@ -31,6 +46,7 @@ function App() {
     setTime(finalTime);
     setGameMode(mode);
     setStartIndex(finalStartIndex);
+    setNextStartIndex(finalStartIndex);
 
     setWords(getCapturedWords());
     setIsSettingsOpen(false);
@@ -53,6 +69,11 @@ function App() {
     playSound("passo");
   };
 
+  const handleSequentialGameEnd = useCallback((completedIndex) => {
+    setLastSequenceIndex(completedIndex);
+    setNextStartIndex((completedIndex + 1) % words.length);
+  }, [words.length]);
+
   return (
     <div className="App">
       <header className="app-header animate-slide-down">
@@ -74,6 +95,13 @@ function App() {
           >
             <FaBook size={18} />
           </button>
+
+          <span
+            className="sequence-progress"
+            title="Ultimo indice sequenziale della partita conclusa"
+          >
+            Ultimo indice: {lastSequenceIndex === null ? "-" : lastSequenceIndex}
+          </span>
 
           {view === "game" && (
             <button
@@ -109,7 +137,7 @@ function App() {
             onApply={applySettings}
             defaultTime={time}
             currentMode={gameMode}
-            currentStartIndex={startIndex}
+            currentStartIndex={nextStartIndex}
             wordCount={words.length}
           />
 
@@ -119,7 +147,9 @@ function App() {
             isMuted={muted}
             mode={gameMode}
             startIndex={startIndex}
+            nextStartIndex={nextStartIndex}
             raddoppiWords={getRaddoppi()}
+            onSequentialGameEnd={handleSequentialGameEnd}
           />
         </>
       ) : (
