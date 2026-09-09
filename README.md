@@ -4,7 +4,7 @@ Trainer web per giocare a **Intesa Vincente** con un dizionario di parole, timer
 
 **Applicazione online:** [ilparola.github.io/intesa-vincente-trainer](https://ilparola.github.io/intesa-vincente-trainer/)
 
-Il software e stato utilizzato per allenarsi anche da una vera squadra campione del programma **Intesa Vincente**.
+Il software e stato utilizzato per allenarsi anche da una vera squadra che ha partecipato al programma **Reazione a Catena**.
 
 ---
 
@@ -73,13 +73,13 @@ Dal pulsante **Archivio** puoi consultare il dizionario, filtrare le parole e ap
 
 ### Scorciatoie da tastiera
 
-| Tasto | Azione |
-| --- | --- |
-| `Spazio` / `Invio` | Buzzer / avvio o pausa |
-| `Freccia su` / `P` | Passo |
-| `Freccia destra` / `D` | Corretto |
-| `Freccia sinistra` / `S` | Errore |
-| `R` | Reset della partita |
+| Tasto                    | Azione                 |
+| ------------------------ | ---------------------- |
+| `Spazio` / `Invio`       | Buzzer / avvio o pausa |
+| `Freccia su` / `P`       | Passo                  |
+| `Freccia destra` / `D`   | Corretto               |
+| `Freccia sinistra` / `S` | Errore                 |
+| `R`                      | Reset della partita    |
 
 ### Avvio in locale
 
@@ -228,13 +228,13 @@ The **Archive** view lets you browse and filter the dictionary and open availabl
 
 ### Keyboard shortcuts
 
-| Key | Action |
-| --- | --- |
-| `Space` / `Enter` | Buzzer / start or pause |
-| `Arrow Up` / `P` | Pass |
-| `Arrow Right` / `D` | Correct |
-| `Arrow Left` / `S` | Incorrect |
-| `R` | Reset the game |
+| Key                 | Action                  |
+| ------------------- | ----------------------- |
+| `Space` / `Enter`   | Buzzer / start or pause |
+| `Arrow Up` / `P`    | Pass                    |
+| `Arrow Right` / `D` | Correct                 |
+| `Arrow Left` / `S`  | Incorrect               |
+| `R`                 | Reset the game          |
 
 ### Local development
 
