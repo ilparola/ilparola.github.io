@@ -152,6 +152,7 @@ function App() {
             startIndex={startIndex}
             nextStartIndex={nextStartIndex}
             raddoppiWords={getRaddoppi()}
+            onSequentialIndexChange={handleSequentialGameEnd}
             onSequentialGameEnd={handleSequentialGameEnd}
           />
         </>

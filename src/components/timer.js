@@ -22,6 +22,7 @@ function Timer({
   startIndex = 0,
   nextStartIndex = startIndex,
   raddoppiWords = [],
+  onSequentialIndexChange,
   onSequentialGameEnd,
 }) {
   const [time, setTime] = useState(startingTime);
@@ -126,6 +127,8 @@ function Timer({
         selectedWord = words[selectedIndex];
         sequenceIndexRef.current = (selectedIndex + 1) % words.length;
         lastSequentialIndexRef.current = selectedIndex;
+        saveLastSequenceIndex(selectedIndex);
+        onSequentialIndexChange?.(selectedIndex);
       } else {
         const unusedWords = words.filter(
           (w) =>
@@ -149,7 +152,17 @@ function Timer({
       // Si mette in pausa per rispondere
       setIsPaused(true);
     }
-  }, [isPaused, time, words, guessedWords, errors, passedWords, endGame, mode]);
+  }, [
+    isPaused,
+    time,
+    words,
+    guessedWords,
+    errors,
+    passedWords,
+    endGame,
+    mode,
+    onSequentialIndexChange,
+  ]);
 
   const handleRaddoppio = useCallback(() => {
     if (
