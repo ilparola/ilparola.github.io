@@ -4,6 +4,8 @@ Trainer web per giocare a **Intesa Vincente** con un dizionario di parole, timer
 
 **Applicazione online:** [ilparola.github.io/intesa-vincente-trainer](https://ilparola.github.io/intesa-vincente-trainer/)
 
+Il software e stato utilizzato per allenarsi anche da una vera squadra campione del programma **Intesa Vincente**.
+
 ---
 
 ## Italiano
@@ -160,6 +162,8 @@ I dati sono inclusi nella build come moduli JavaScript statici. Il CSV di origin
 **Intesa Vincente Trainer** is a browser-based trainer for the Italian word-association game. It provides a timed game, scoring, bonus rounds, hints, a word archive and a printable session summary.
 
 **Live application:** [ilparola.github.io/intesa-vincente-trainer](https://ilparola.github.io/intesa-vincente-trainer/)
+
+The software has also been used for training by a real championship-winning team from the **Intesa Vincente** programme.
 
 ### Features
 
