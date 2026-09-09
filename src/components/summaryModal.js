@@ -9,6 +9,8 @@ const SummaryModal = ({
   guessedWords = [],
   errorWords = [],
   passedWords = [],
+  finalWord = "",
+  finalWordStatus = null,
 }) => {
   const componentRef = useRef();
   
@@ -71,6 +73,59 @@ const SummaryModal = ({
             <div>Media Generica Risposta: <b>{avgTime}s</b></div>
             <div>Parole Non Indovinate: <b>{errorWords.length + passedWords.length}</b></div>
           </div>
+
+          {finalWord && finalWordStatus && (
+            <div
+              style={{
+                marginBottom: "2rem",
+                padding: "1rem",
+                border: "1px solid var(--panel-border)",
+                borderRadius: "8px",
+                background: "rgba(255,255,255,0.03)",
+                textAlign: "center",
+              }}
+            >
+              <div
+                style={{
+                  color: "var(--color-text-muted)",
+                  fontSize: "0.7rem",
+                  fontWeight: 700,
+                  letterSpacing: "0.8px",
+                  textTransform: "uppercase",
+                }}
+              >
+                Ultima parola allo scadere
+              </div>
+              <div
+                style={{
+                  margin: "0.35rem 0",
+                  fontSize: "1.15rem",
+                  fontWeight: 800,
+                }}
+              >
+                {finalWord.toUpperCase()}
+              </div>
+              <div
+                style={{
+                  color:
+                    finalWordStatus === "correct"
+                      ? "var(--color-success)"
+                      : finalWordStatus === "error"
+                        ? "var(--color-danger)"
+                        : "var(--color-text-muted)",
+                  fontSize: "0.8rem",
+                  fontWeight: 800,
+                  textTransform: "uppercase",
+                }}
+              >
+                {finalWordStatus === "correct"
+                  ? "Corretto"
+                  : finalWordStatus === "error"
+                    ? "Errato"
+                    : "Non risposto"}
+              </div>
+            </div>
+          )}
 
           {/* Parole Dettagliate */}
           <div className="modal-word-summary">
